@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Reflection;
 
 namespace MVVM_SandBox.Model
 {
@@ -50,5 +51,24 @@ namespace MVVM_SandBox.Model
             set => LongitudeB = Convert.ToDouble(value, CultureInfo.InvariantCulture);
         }
         public double LongitudeB { get; set; }
+
+        /// <summary>
+        /// Проверяет, содержит ли объект в своих полях param
+        /// </summary>
+        /// <param name="param">Параметр проверки</param>
+        /// <returns></returns>
+        public bool Filter(string param)
+        { 
+            var t = typeof(DataModel);
+            foreach (var property in t.GetProperties())
+            {
+                var value = property.GetValue(this);
+                if (value.ToString().Contains(param) == true)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

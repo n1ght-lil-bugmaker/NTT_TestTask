@@ -17,8 +17,8 @@
             CanUserAddRows="False"                  
             CanUserDeleteRows="False"                  
             IsReadOnly="True"                 
-            Margin="5,5,4.6,0"                  
-            Height="414"                  
+            Margin="5,35,4.6,0"                  
+            Height="377"                  
             VerticalAlignment="Top"
             AutoGenerateColumns="False">
 
@@ -121,8 +121,7 @@
             Margin="60,0,0,35"
             Content="{Binding Path}"
             VerticalAlignment="Bottom"
-            HorizontalAlignment="Left"
-            />
+            HorizontalAlignment="Left"/>
 
         <Button
             Height="25"
@@ -148,6 +147,29 @@
             VerticalAlignment="Bottom"
             Margin="220,0,0,5"
             Content="{Binding LoadStatus}"/>
-
+        <TextBox 
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Top"
+            Height="25"
+            Margin="607,5,0,0"
+            TextWrapping="Wrap"
+            Text="{Binding FilterParam, UpdateSourceTrigger=PropertyChanged}"
+            Width="182"/>
+        <Button
+            Height="25"
+            Width="50"
+            Margin="0,5,191.6,0"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Right"
+            Content="Cancel"
+            Command="{Binding CancelFilteringCommand}"/>
+        <Button
+            Height="25"
+            Width="50"
+            Margin="0,5,246.6,0"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Right"
+            Content="Filter"
+            Command="{Binding FilterCommand}"/>
     </Grid>
 </Window>

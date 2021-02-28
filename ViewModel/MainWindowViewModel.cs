@@ -3,7 +3,10 @@ using MVVM_SandBox.Commands;
 using MVVM_SandBox.Model;
 using MVVM_SandBox.Model.Loader;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -17,7 +20,11 @@ namespace MVVM_SandBox.ViewModel
         /// <summary>
         /// Коллекция объектов DataModel, подгруженных в конкретный момент
         /// </summary>
-        public ObservableCollection<DataModel> DataCollection { get; } = new ObservableCollection<DataModel>();
+        public ObservableCollection<DataModel> DataCollection { get; private set; } = new ObservableCollection<DataModel>();
+
+        private List<DataModel> _buffer;
+
+        private bool _filtered = false;
 
         private Loader _loader = new Loader();
 
@@ -34,7 +41,7 @@ namespace MVVM_SandBox.ViewModel
             get => _progress;
             set => Set(ref _progress, value);
         }
-        #endregion
+            #endregion
 
             #region LoadStatus 
 
@@ -47,7 +54,7 @@ namespace MVVM_SandBox.ViewModel
             get => _loadStatus;
             set => Set(ref _loadStatus, value);
         }
-        #endregion
+            #endregion
 
             #region MaxProgress
 
@@ -60,7 +67,7 @@ namespace MVVM_SandBox.ViewModel
             get => _maxProgress;
             set => Set(ref _maxProgress, value);
         }
-        #endregion
+            #endregion
 
             #region Path
         /// <summary>
@@ -74,6 +81,16 @@ namespace MVVM_SandBox.ViewModel
             set => Set(ref _path, value);
         }
 
+            #endregion
+
+            #region FilterParam
+        private string _filterParam = "";
+
+        public string FilterParam
+        {
+            get => _filterParam;
+            set => Set(ref _filterParam, value);
+        }
             #endregion
 
         #endregion
@@ -109,7 +126,7 @@ namespace MVVM_SandBox.ViewModel
                 MessageBox.Show(ex.Message);
             }
         }
-            #endregion
+                #endregion  
 
             #region InterruptLoadingCommand
 
@@ -132,7 +149,7 @@ namespace MVVM_SandBox.ViewModel
         /// <param name="parameter">Параметр выполнения</param>
         private void ExecuteInteruptLoadingCommand(object parameter) => _loader.Interrupt();
 
-        #endregion
+            #endregion
 
             #region BrowseFileCommand
 
@@ -142,28 +159,95 @@ namespace MVVM_SandBox.ViewModel
         /// </summary>
         public ICommand BrowseFileCommand { get; }
 
-
         /// <summary>
         /// Проверяет возможность выбора файла
         /// </summary>
         /// <param name="parameter">Параметр проверки</param>
         /// <returns></returns>
 
-        public bool CanBrowseFileCommandExecuted(object parameter) => true;
-
+        private bool CanBrowseFileCommandExecuted(object parameter) => true;
 
         /// <summary>
         /// Выполняет команду выбора файла
         /// </summary>
         /// <param name="parameter">Параметр выполнения</param>
-        public void ExecuteBrowseFileCommand(object parameter)
+        private void ExecuteBrowseFileCommand(object parameter)
         {
             OpenFileDialog dialog = new OpenFileDialog();
-
+            
             if(dialog.ShowDialog() == true)
             {
                 Path = dialog.FileName;
             }
+        }
+            #endregion
+
+            #region FilterCommand
+        /// <summary>
+        /// Команда фильтрования данных
+        /// </summary>
+        public ICommand FilterCommand { get; }
+
+        /// <summary>
+        /// Проверяет возможна ли фильтрация
+        /// </summary>
+        /// <param name="parameter">Параметр проверки</param>
+        /// <returns></returns>
+        private bool CanFilterCommandExecuted(object parameter) => !_filtered && _filterParam != "";
+
+        /// <summary>
+        /// Выполняет фильтрацию данных
+        /// </summary>
+        /// <param name="parameter">Параметр фильтрования</param>
+        private void ExecuteFilterCommand(object parameter)
+        {
+            
+            _buffer = new List<DataModel>(DataCollection);
+            var enumerable = DataCollection
+                .ToArray()
+                .Where(x => x.Filter(FilterParam));
+
+            DataCollection.Clear();
+
+            foreach (var item in enumerable)
+            {
+                DataCollection.Add(item);
+            }
+
+            _filtered = true;
+        }
+
+            #endregion
+
+            #region CancelFilteringCommand
+        /// <summary>
+        /// Команда отмены фильтрации
+        /// </summary>
+        public ICommand CancelFilteringCommand { get; }
+
+        /// <summary>
+        /// Проверяет возможность выполнения отмены фильтрации
+        /// </summary>
+        /// <param name="parameter">Параметр проверки</param>
+        /// <returns></returns>
+        private bool CanCancelCommandFilteringExecuted(object parameter) => _filtered;
+
+        /// <summary>
+        /// Выполняет отмену фильтрации
+        /// </summary>
+        /// <param name="parameter">Параметр выполнения</param>
+        private void ExecuteCancelFilteringCommand(object parameter)
+        {
+            
+            DataCollection.Clear();
+
+            foreach (var item in _buffer)
+            {
+                DataCollection.Add(item);
+            }
+            _filtered = false;
+            FilterParam = "";
+            
         }
             #endregion
 
@@ -177,6 +261,8 @@ namespace MVVM_SandBox.ViewModel
             LoadCommand = new LambdaCommand(CanLoadCommandExecuted, LoadCommandExecute);
             InteruptLoadingCommand = new LambdaCommand(CanInteruptLoadingCommandExecuted, ExecuteInteruptLoadingCommand);
             BrowseFileCommand = new LambdaCommand(CanBrowseFileCommandExecuted, ExecuteBrowseFileCommand);
+            FilterCommand = new LambdaCommand(CanFilterCommandExecuted, ExecuteFilterCommand);
+            CancelFilteringCommand = new LambdaCommand(CanCancelCommandFilteringExecuted, ExecuteCancelFilteringCommand);
 
             _loader.PropertyChanged += (sender, args) =>
             {
