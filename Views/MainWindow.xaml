@@ -1,0 +1,155 @@
+﻿<Window x:Class="MVVM_SandBox.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MVVM_SandBox"
+        xmlns:vm="clr-namespace:MVVM_SandBox.ViewModel"
+        xmlns:cmd="clr-namespace:MVVM_SandBox.Commands"
+        mc:Ignorable="d"
+        Title="NTT TestTask" Height="513.6" Width="800">
+    <Window.DataContext>
+        <vm:MainWindowViewModel></vm:MainWindowViewModel>
+    </Window.DataContext>
+    <Grid>
+        <DataGrid 
+            ItemsSource="{Binding DataCollection}"         
+            CanUserAddRows="False"                  
+            CanUserDeleteRows="False"                  
+            IsReadOnly="True"                 
+            Margin="5,5,4.6,0"                  
+            Height="414"                  
+            VerticalAlignment="Top"
+            AutoGenerateColumns="False">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn 
+                    Binding="{Binding Path=Date}"
+                    IsReadOnly="True"       
+                    Width="60"
+                    CanUserResize="True"            
+                    Header="Date"/>
+                <DataGridTextColumn 
+                    Binding="{Binding Path=ObjectA}"
+                    IsReadOnly="True"       
+                    Width="55"
+                    CanUserResize="True"            
+                    Header="ObjectA"/>
+                <DataGridTextColumn 
+                    Binding="{Binding Path=TypeA}"
+                    IsReadOnly="True"       
+                    Width="50"
+                    CanUserResize="True"            
+                    Header="TypeA"/>
+                <DataGridTextColumn 
+                    Binding="{Binding Path=ObjectB}"
+                    IsReadOnly="True"       
+                    Width="55"
+                    CanUserResize="True"            
+                    Header="ObjectB"/>
+                <DataGridTextColumn 
+                    Binding="{Binding Path=TypeB}"
+                    IsReadOnly="True"       
+                    Width="50"
+                    CanUserResize="True"            
+                    Header="TypeB"/>
+                <DataGridTextColumn 
+                    Binding="{Binding Path=Direction}"
+                    IsReadOnly="True"       
+                    Width="60"
+                    CanUserResize="True"            
+                    Header="Direction"/>
+                <DataGridTextColumn 
+                    Binding="{Binding Path=Color}"
+                    IsReadOnly="True"       
+                    Width="50"
+                    CanUserResize="True"
+                    Header="Color"/>
+                <DataGridTextColumn 
+                    Binding="{Binding Path=Intensity}"
+                    IsReadOnly="True"       
+                    Width="55"
+                    CanUserResize="True"            
+                    Header="Intensity"/>
+                <DataGridTextColumn 
+                    Binding="{Binding Path=LatitudeA}"
+                    IsReadOnly="True"       
+                    Width="62"
+                    CanUserResize="True"            
+                    Header="LatitudeA"/>
+                <DataGridTextColumn 
+                    Binding="{Binding Path=LongitudeA}"
+                    IsReadOnly="True"       
+                    Width="70"
+                    CanUserResize="True"            
+                    Header="LongitudeA"/>
+                <DataGridTextColumn 
+                    Binding="{Binding Path=LatitudeB}"
+                    IsReadOnly="True"       
+                    Width="62"
+                    CanUserResize="True"            
+                    Header="LatitudeB"/>
+                <DataGridTextColumn 
+                    Binding="{Binding Path=LongitudeB}"
+                    IsReadOnly="True"       
+                    Width="*"
+                    CanUserResize="True"            
+                    Header="LongitudeB"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button
+            Height="25"
+            Width="50"
+            Margin="5"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Left"
+            Content="Load"
+            Command="{Binding LoadCommand}"/>
+        <Button
+            Height="25"
+            Width="50"
+            Margin="5,0,0,35"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Left"
+            Content="Browse"
+            Command="{Binding BrowseFileCommand}"/>
+
+        <Label
+            Height="25"
+            Width="342"
+            Margin="60,0,0,35"
+            Content="{Binding Path}"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Left"
+            />
+
+        <Button
+            Height="25"
+            Width="50"
+            Margin="60,0,0,5"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Left"
+            Content="Interrupt"
+            Command="{Binding InteruptLoadingCommand}"/>
+
+
+
+        <ProgressBar
+            Height="25"
+            Width="100"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Margin="115,0,0,5"
+            Maximum="{Binding MaxProgress}"
+            Value="{Binding Progress}"/>
+        <Label
+            Height="25"
+            Width="100"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Margin="220,0,0,5"
+            Content="{Binding LoadStatus}"/>
+
+    </Grid>
+</Window>
