@@ -13,13 +13,7 @@ namespace MVVM_SandBox.ViewModel
     /// Модель отображения главного окна
     /// </summary>
     internal class MainWindowViewModel : ViewModel
-    {
-        #region TODO
-        /// <summary>
-        /// Почистить код
-        /// </summary>
-        #endregion
-        
+    {  
         /// <summary>
         /// Коллекция объектов DataModel, подгруженных в конкретный момент
         /// </summary>
