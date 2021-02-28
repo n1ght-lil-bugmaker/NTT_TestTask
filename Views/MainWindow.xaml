@@ -133,8 +133,6 @@
             Content="Interrupt"
             Command="{Binding InteruptLoadingCommand}"/>
 
-
-
         <ProgressBar
             Height="25"
             Width="100"
