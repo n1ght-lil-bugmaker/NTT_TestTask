@@ -21,14 +21,12 @@ namespace MVVM_SandBox.Model
         public string Direction { get; set; }
         public string Color { get; set; }
 
-        
         private string IntensitySetter
         {
             set => Intensity = int.Parse(value);
         }
         public int Intensity { get; set; }
 
-        
         private string LatitudeASetter
         {
             set => LatitudeA = Convert.ToDouble(value, CultureInfo.InvariantCulture);
